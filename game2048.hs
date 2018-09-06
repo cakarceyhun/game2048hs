@@ -27,8 +27,7 @@ main = hspec $ do
       shiftLine [2, 4, 0, 0] `shouldBe` [2, 4, 0, 0]
     it "[2, 2, 0, 0] --shiftLine--> [4, 0, 0, 0]" $ do
       shiftLine [2, 2, 0, 0] `shouldBe` [4, 0, 0, 0]
-
--- [2, 2, 0, 0] --shiftLine--> [4, 0, 0, 0]
--- [0, 0, 2, 2] --shiftLine--> [4, 0, 0, 0]
--- [2, 0, 2, 0] --shiftLine--> [4, 0, 0, 0]
--- [2, 2, 4, 0] --shiftLine--> [8, 0, 0, 0]
+    it "[0, 0, 2, 2] --shiftLine--> [4, 0, 0, 0]" $ do
+      shiftLine [0, 0, 2, 2] `shouldBe` [4, 0, 0, 0]
+    it "[2, 2, 4, 0] --shiftLine--> [8, 0, 0, 0]" $ do
+      shiftLine [2, 2, 4, 0] `shouldBe` [8, 0, 0, 0]

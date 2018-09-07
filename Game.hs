@@ -35,3 +35,18 @@ flattenVertically xss =
     innerFlatten (xs, yss) = innerFlatten (xs ++ (map (\ys -> head ys) yss), map (\ys -> tail ys) yss)
   in
     fst $ innerFlatten ([], xss)
+
+eventToLeft :: [Int] -> [Int]
+eventToLeft xs = flattenHorizontally (map shiftLine (alignHorizontally xs))
+
+eventToRight :: [Int] -> [Int]
+eventToRight xs = reverse (eventToLeft (reverse xs))
+
+eventToUp :: [Int] -> [Int]
+eventToUp xs = flattenVertically (map shiftLine (alignVertically xs))
+
+eventToDown :: [Int] -> [Int]
+eventToDown xs = reverse (eventToUp (reverse xs))
+
+
+

@@ -1,5 +1,8 @@
 module Game where
 
+import Data.Time.Clock.POSIX
+import System.Random
+
 shiftLine :: [Int] -> [Int]
 shiftLine xs =
   let
@@ -48,5 +51,69 @@ eventToUp xs = flattenVertically (map shiftLine (alignVertically xs))
 eventToDown :: [Int] -> [Int]
 eventToDown xs = reverse (eventToUp (reverse xs))
 
+generateTile :: Int -> IO (Int, Int)
+generateTile numberOfZero = do
+  posixTime <- getPOSIXTime
+  let generatorNumber = (truncate (posixTime * 1000000000)) `mod` 1000000000
+  let randomNumber =
+        fst (random (mkStdGen generatorNumber) :: (Int, StdGen))
+  return (
+    mod (div randomNumber 2) numberOfZero,
+    2 * (mod randomNumber 2) + 2
+    )
 
+data Direction = UP | DOWN | LEFT | RIGHT | WRONG deriving (Show, Eq)
 
+directionTable :: String -> Direction
+directionTable "u" = UP
+directionTable "d" = DOWN
+directionTable "l" = LEFT
+directionTable "r" = RIGHT
+directionTable _ = WRONG
+
+askDirection :: IO Direction
+askDirection = do
+  line <- getLine
+  let direction = directionTable line
+  if direction == WRONG then
+    askDirection
+  else
+    return direction
+
+placeTile :: (Int, Int) -> [Int] -> [Int]
+placeTile tile tiles = take (fst tile) tiles ++ [snd tile] ++ drop (fst tile + 1) tiles
+
+slide :: Direction -> [Int] -> [Int]
+slide direction tiles
+  | direction == UP    = eventToUp tiles
+  | direction == DOWN  = eventToDown tiles
+  | direction == LEFT  = eventToLeft tiles
+  | direction == RIGHT = eventToRight tiles
+  | otherwise          = error "SHOULD NOT BE HERE"
+
+printTiles :: [Int] -> IO ()
+printTiles tiles
+  | length tiles >= 4 = do
+      print $ take 4 tiles
+      printTiles $ drop 4 tiles
+  | otherwise = return ()
+
+mainLoop :: [Int] -> IO ()
+mainLoop tiles
+  | numberOfZero == 0 = do print "End"
+  | otherwise          = do
+    tile <- generateTile numberOfZero
+    let tiles' = placeTile tile tiles
+    printTiles tiles'
+    direction <- askDirection
+    let tiles'' = slide direction tiles'
+    mainLoop tiles''
+  where
+    numberOfZero = length $ filter (\x -> x == 0) tiles
+
+main :: IO ()
+main =
+  let
+    tiles = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  in do
+    mainLoop tiles

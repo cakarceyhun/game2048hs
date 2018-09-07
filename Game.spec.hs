@@ -1,5 +1,8 @@
 module Main where
-import Game
+import Game (shiftLine,
+             alignHorizontally, flattenHorizontally,
+             alignVertically,flattenVertically,
+             eventToLeft, eventToRight, eventToUp, eventToDown)
 
 import Test.Hspec
 

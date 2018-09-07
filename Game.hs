@@ -3,8 +3,8 @@ module Game where
 import Data.Time.Clock.POSIX
 import System.Random
 
-shiftLine :: [Int] -> [Int]
-shiftLine xs =
+shiftLine' :: [Int] -> [Int]
+shiftLine' xs =
   let
     xs' = filter (/=0) xs
     merger acc x
@@ -14,6 +14,9 @@ shiftLine xs =
     xs'' = foldl merger [] xs'
   in
     xs'' ++ (replicate (4 - (length xs'')) 0)
+
+shiftLine :: [Int] -> [Int]
+shiftLine xs = shiftLine' $ shiftLine' xs
 
 alignHorizontally :: [Int] -> [[Int]]
 alignHorizontally xs =

@@ -25,6 +25,8 @@ main = hspec $ do
       shiftLine [0, 0, 2, 2] `shouldBe` [4, 0, 0, 0]
     it "[2, 2, 4, 0] --shiftLine--> [8, 0, 0, 0]" $ do
       shiftLine [2, 2, 4, 0] `shouldBe` [8, 0, 0, 0]
+    it "[2, 2, 0, 4] --shiftLine--> [8, 0, 0, 0]" $ do
+      shiftLine [4, 2, 0, 2] `shouldBe` [8, 0, 0, 0]
 
   describe "alignHorizantally Tests" $ do
     it "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5] --alignHorizontally--> [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 0, 1], [2, 3, 4, 5]]" $ do

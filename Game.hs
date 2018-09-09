@@ -84,7 +84,16 @@ askDirection = do
     return direction
 
 placeTile :: (Int, Int) -> [Int] -> [Int]
-placeTile tile tiles = take (fst tile) tiles ++ [snd tile] ++ drop (fst tile + 1) tiles
+placeTile target_tile tiles =
+  let
+    target_position = fst target_tile
+    target_value = snd target_tile
+    decide (tiles', position) value
+      | value == 0 && target_position == position = (tiles' ++ [target_value], position + 1)
+      | value == 0                                = (tiles' ++ [value], position + 1)
+      | otherwise                                 = (tiles' ++ [value], position)
+   in
+    fst $ foldl decide ([], 0) tiles
 
 slide :: Direction -> [Int] -> [Int]
 slide direction tiles

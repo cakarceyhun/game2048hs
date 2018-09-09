@@ -68,10 +68,10 @@ generateTile numberOfZero = do
 data Direction = UP | DOWN | LEFT | RIGHT | WRONG deriving (Show, Eq)
 
 directionTable :: String -> Direction
-directionTable "u" = UP
-directionTable "d" = DOWN
-directionTable "l" = LEFT
-directionTable "r" = RIGHT
+directionTable "w" = UP
+directionTable "s" = DOWN
+directionTable "a" = LEFT
+directionTable "d" = RIGHT
 directionTable _ = WRONG
 
 askDirection :: IO Direction
@@ -101,6 +101,11 @@ printTiles tiles
       printTiles $ drop 4 tiles
   | otherwise = return ()
 
+updateTilesWithDirection :: [Int] -> IO [Int] 
+updateTilesWithDirection tiles' = do
+      direction <- askDirection
+      return (slide direction tiles')
+
 mainLoop :: [Int] -> IO ()
 mainLoop tiles
   | numberOfZero == 0 = do print "End"
@@ -108,8 +113,7 @@ mainLoop tiles
     tile <- generateTile numberOfZero
     let tiles' = placeTile tile tiles
     printTiles tiles'
-    direction <- askDirection
-    let tiles'' = slide direction tiles'
+    tiles'' <- updateTilesWithDirection tiles'
     mainLoop tiles''
   where
     numberOfZero = length $ filter (\x -> x == 0) tiles
